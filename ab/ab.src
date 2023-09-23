@@ -1,0 +1,30 @@
+// Autobuild mini 1.0.0
+// Made with <3 for developers by tuonux
+clear_screen
+print("Autobuild mini 1.0.0")
+print("Made with <3 for developers by <color=orange>tuonux")
+SH = get_shell
+src = null
+while not src
+    srcPath = user_input("Enter the full path of your source code\n> ")
+    src = SH.host_computer.File(srcPath)
+    if not src or src.is_folder then print("<color=red>Invalid path")
+end while
+clear_screen
+print("Watching "+src.path+"...")
+old_content = src.get_content
+endPath = src.path.split("/")[0:-1].join("/")
+while true
+    wait(1)
+    new_content = SH.host_computer.File(srcPath).get_content
+    if new_content == old_content then continue
+    print("<color=yellow>Content changed attempt to build it")
+    x = SH.build(src.path, endPath)
+    old_content = new_content
+    if x != "" then 
+        print("<color=red> Build failed check the errors below:")
+        print(x)
+        continue
+    end if
+    print("<color=green>Build successfully to " + src.path.replace("\.src", ""))
+end while
